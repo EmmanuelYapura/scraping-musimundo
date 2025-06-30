@@ -29,7 +29,7 @@ Este proyecto es un **web scraper** desarrollado en Python que extrae informaci√
 1. **Clonar el repositorio:**
 
   ```
-  git clone https://github.com/tuusuario/musimundo-scraper.git "nombre_carpeta"
+  git clone https://github.com/EmmanuelYapura/scraping-musimundo.git "nombre_carpeta"
   cd "nombre_carpeta"
   ```
 

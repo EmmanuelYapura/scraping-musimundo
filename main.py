@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json, os
 
-cookies = {
+COOKIES = {
     'anonymous-consents': '%5B%5D',
     'cookie-notification': 'NOT_ACCEPTED',
     'ROUTE': '.accstorefront-dd875779d-k6w7s',
@@ -10,7 +10,7 @@ cookies = {
     'HSESSION': '1',
 }
 
-headers = {
+HEADERS = {
     'accept': 'application/json, text/plain, */*',
     'accept-language': 'es-AR,es;q=0.8',
     'priority': 'u=1, i',
@@ -27,17 +27,6 @@ headers = {
 }
 
 URL = 'https://www.musimundo.com'
-
-response = requests.get(URL)
-
-html = response.text
-soup = BeautifulSoup(html, "html.parser")
-
-#Estos links obtienen todos los de categoria (elementos repetidos)
-links = [a['href'] for a in soup.select('div.ex-h1.nav-submenu-title a')]
-
-#Los links comienzan a repetirse a partir del elemento 14
-links_sin_repetidos = links[:14]
 
 def crear_json(nombre, lista):
     carpeta = 'productos'
@@ -77,7 +66,7 @@ def extraer_productos_categorias(link, cant_pages, prod):
                 'q': ':relevance',
                 'page': i,
               }
-            response = requests.get(link, params=params, cookies=cookies, headers=headers)
+            response = requests.get(link, params=params, cookies=COOKIES, headers=HEADERS)
             data = response.json()
             productos = extraer_datos(data["results"])
             prod = prod + productos
@@ -95,7 +84,7 @@ def scraping_links(links):
             'q': ':relevance',
             'page': 0,
         }
-        response = requests.get(url_link, params=params, cookies=cookies, headers=headers)
+        response = requests.get(url_link, params=params, cookies=COOKIES, headers=HEADERS)
         data = response.json()
         nro_pages = data["pagination"]["numberOfPages"]
         productos_cat = extraer_datos(data["results"]) 
@@ -106,4 +95,16 @@ def scraping_links(links):
         else:
             print(f"La categoria {nombre_categoria} no tiene productos cargados")
 
-scraping_links(links_sin_repetidos)
+def get_links():
+    response = requests.get(URL)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    #Estos links obtienen todos los de categoria (elementos repetidos)
+    links = [a['href'] for a in soup.select('div.ex-h1.nav-submenu-title a')]
+    #Los links comienzan a repetirse a partir del elemento 14
+    links_sin_repetidos = links[:14]
+    return links_sin_repetidos
+
+if __name__ == "__main__":
+    links = get_links()
+    scraping_links(links)

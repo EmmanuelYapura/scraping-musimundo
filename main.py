@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json, os
 
-cookies = {
+COOKIES = {
     'anonymous-consents': '%5B%5D',
     'cookie-notification': 'NOT_ACCEPTED',
     'ROUTE': '.accstorefront-dd875779d-k6w7s',
@@ -10,7 +10,7 @@ cookies = {
     'HSESSION': '1',
 }
 
-headers = {
+HEADERS = {
     'accept': 'application/json, text/plain, */*',
     'accept-language': 'es-AR,es;q=0.8',
     'priority': 'u=1, i',
@@ -77,7 +77,7 @@ def extraer_productos_categorias(link, cant_pages, prod):
                 'q': ':relevance',
                 'page': i,
               }
-            response = requests.get(link, params=params, cookies=cookies, headers=headers)
+            response = requests.get(link, params=params, cookies=COOKIES, headers=HEADERS)
             data = response.json()
             productos = extraer_datos(data["results"])
             prod = prod + productos
@@ -95,7 +95,7 @@ def scraping_links(links):
             'q': ':relevance',
             'page': 0,
         }
-        response = requests.get(url_link, params=params, cookies=cookies, headers=headers)
+        response = requests.get(url_link, params=params, cookies=COOKIES, headers=HEADERS)
         data = response.json()
         nro_pages = data["pagination"]["numberOfPages"]
         productos_cat = extraer_datos(data["results"]) 

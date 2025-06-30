@@ -28,17 +28,6 @@ HEADERS = {
 
 URL = 'https://www.musimundo.com'
 
-response = requests.get(URL)
-
-html = response.text
-soup = BeautifulSoup(html, "html.parser")
-
-#Estos links obtienen todos los de categoria (elementos repetidos)
-links = [a['href'] for a in soup.select('div.ex-h1.nav-submenu-title a')]
-
-#Los links comienzan a repetirse a partir del elemento 14
-links_sin_repetidos = links[:14]
-
 def crear_json(nombre, lista):
     carpeta = 'productos'
     os.makedirs(carpeta, exist_ok=True)
@@ -106,4 +95,16 @@ def scraping_links(links):
         else:
             print(f"La categoria {nombre_categoria} no tiene productos cargados")
 
-scraping_links(links_sin_repetidos)
+def get_links():
+    response = requests.get(URL)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    #Estos links obtienen todos los de categoria (elementos repetidos)
+    links = [a['href'] for a in soup.select('div.ex-h1.nav-submenu-title a')]
+    #Los links comienzan a repetirse a partir del elemento 14
+    links_sin_repetidos = links[:14]
+    return links_sin_repetidos
+
+if __name__ == "__main__":
+    links = get_links()
+    scraping_links(links)

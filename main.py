@@ -76,6 +76,23 @@ def buscar_categoria(categoria, links):
             return link
     return False
 
+def productos_cat(nombre_categoria):
+    links_cat = get_links()
+    link_cat = buscar_categoria(nombre_categoria, links_cat)
+    if link_cat:
+        url_link = URL + link_cat + '/results'
+        params = {
+            'q': ':relevance',
+            'page': 0,
+        }
+        response = requests.get(url_link, params=params, cookies=COOKIES, headers=HEADERS)
+        data = response.json()
+        nro_pages = data["pagination"]["numberOfPages"]
+        productos_cat = extraer_datos(data["results"]) 
+        extraer_productos_categorias(url_link, nro_pages, productos_cat)
+        return productos_cat
+    else:
+        return {"message": "Esta categoria no tiene productos"}
 
 #FastAPI
 app = FastAPI()

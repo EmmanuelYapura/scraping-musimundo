@@ -29,23 +29,6 @@ HEADERS = {
 
 URL = 'https://www.musimundo.com'
 
-def crear_json(nombre, lista):
-    carpeta = 'productos'
-    os.makedirs(carpeta, exist_ok=True)
-
-    ruta_archivo = os.path.join(carpeta, f"{nombre}.json")
-
-    if os.path.exists(ruta_archivo):
-        print(f"El archivo '{nombre}.json' ya existe. No se sobreescribirá.")
-        return
-
-    try:
-        with open(ruta_archivo, 'w', encoding='utf-8') as file:
-            json.dump(lista, file, indent=4, ensure_ascii=False)
-            print(f"Archivo {nombre}.json creado.")
-    except Exception as e:
-        print(f" Error al guardar el archivo {nombre}.json: {e}")
-
 def extraer_datos(lista):
     datos = []
     for producto in lista:
@@ -76,29 +59,6 @@ def extraer_productos_categorias(link, cant_pages, prod):
             productos = extraer_datos(data["results"])
             prod.extend(productos)
             print(f'Cantidad de productos scrapeados:  {len(prod)}')
-    
-
-def scraping_links(links):
-    for link in links:
-        url_link = URL + link + '/results'
-
-        nombre_categoria = link.split('/')[1]
-        print(f"Categoria: {nombre_categoria}")
-
-        params = {
-            'q': ':relevance',
-            'page': 0,
-        }
-        response = requests.get(url_link, params=params, cookies=COOKIES, headers=HEADERS)
-        data = response.json()
-        nro_pages = data["pagination"]["numberOfPages"]
-        productos_cat = extraer_datos(data["results"]) 
-        extraer_productos_categorias(url_link, nro_pages, productos_cat)
-        
-        if productos_cat:
-            crear_json(nombre_categoria, productos_cat)
-        else:
-            print(f"La categoria {nombre_categoria} no tiene productos cargados")
 
 def get_links():
     response = requests.get(URL)
@@ -110,17 +70,6 @@ def get_links():
     links_sin_repetidos = links[:14]
     return links_sin_repetidos
 
-def run_scraping():
-    links = get_links()
-    scraping_links(links)
-
-def productos_por_categoria(nombre_cat):
-    try:
-        with open(f"./productos/{nombre_cat}.json", 'r', encoding='utf-8') as file:
-            productos = json.load(file)
-            return productos
-    except Exception as e:
-        raise print(f"Ocurrio un error en la busqueda de los productos en la categoria {nombre_cat}", e)
 
 #FastAPI
 app = FastAPI()
@@ -129,31 +78,22 @@ app = FastAPI()
 def index():
     return {"message": "FastAPI esta funcionando correctamente, listar rutas"}
 
-@app.get('/productos')
+""" @app.get('/productos')
 def get_all_products():
-    ruta_productos = os.path.join('productos')
-    if os.path.exists(ruta_productos):
-        return {"message": "Los productos son los siguientes"}
-
     return {"message": "No hay productos que mostrar, vaya a la ruta /scraping para obtener"}
 
 @app.get('/scraping')
 def scraping_products(backgound_tasks : BackgroundTasks):
-    backgound_tasks.add_task(run_scraping)
-    return {"message": "Se estan generando los productos, esto puede tomar unos minutos, en breve puede volver a /productos"}
+    return {"message": "Se estan generando los productos, esto puede tomar unos minutos, en breve puede volver a /productos"} """
 
 @app.get('/categorias')
 def get_categorias():
-    ruta_productos = os.path.join('productos')
-    if os.path.exists(ruta_productos):
-        categorias = [os.path.splitext(cat)[0] for cat in os.listdir(ruta_productos)]
-        return {"message": f"Las categorias son las siguientes: {categorias}"}
     return {"message": "No hay categorias cargadas"}
 
 @app.get('/categorias/{nombre_categoria}')
 def get_products_cat(nombre_categoria):
     try:
-        productos = productos_por_categoria(nombre_categoria)
+        productos = []
         return productos
     except Exception as e:
         return {"message": f"No se encontraron productos en la categoria {nombre_categoria}, error: {e}"}
@@ -161,7 +101,7 @@ def get_products_cat(nombre_categoria):
 @app.get('/categorias/{nombre_categoria}/{prod_id}')
 def get_products_cat(nombre_categoria, prod_id: int):
     try:    
-        productos = productos_por_categoria(nombre_categoria)
+        productos = []
         return productos[prod_id]
     except Exception as e:
         return {"message": f"No existe el producto con ese id {prod_id} de la categoria {nombre_categoria}, error:  {e}"}

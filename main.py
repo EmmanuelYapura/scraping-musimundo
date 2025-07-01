@@ -1,3 +1,4 @@
+from fastapi import FastAPI, BackgroundTasks
 import requests
 from bs4 import BeautifulSoup
 import json, os
@@ -48,16 +49,20 @@ def crear_json(nombre, lista):
 def extraer_datos(lista):
     datos = []
     for producto in lista:
-        info_producto = {
-            "name": producto["name"],
-            "description": producto["description"],
-            "cashPrice": producto["cashPrice"]["value"], #Este es el precio base
-            "price": producto["price"]["value"], #Precio con descuento (Si es que tiene)
-            "onlyDelivery": producto["onlyDelivery"],
-            "brandInfo": producto["brandInfo"]["name"],
-            "url" : producto["url"]
-        }
-        datos.append(info_producto)
+        try:
+            info_producto = {
+                "name": producto["name"],
+                "description": producto["description"],
+                "cashPrice": producto["cashPrice"]["value"], #Este es el precio base
+                "price": producto["price"]["value"], #Precio con descuento (Si es que tiene)
+                "onlyDelivery": producto["onlyDelivery"],
+                "brandInfo": producto["brandInfo"]["name"],
+                "url" : producto["url"]
+            }
+            datos.append(info_producto)
+        except KeyError as e:
+            print(f"Producto incompleto, falta {e}")
+            continue
     return datos
 
 def extraer_productos_categorias(link, cant_pages, prod):
@@ -69,7 +74,7 @@ def extraer_productos_categorias(link, cant_pages, prod):
             response = requests.get(link, params=params, cookies=COOKIES, headers=HEADERS)
             data = response.json()
             productos = extraer_datos(data["results"])
-            prod = prod + productos
+            prod.extend(productos)
             print(f'Cantidad de productos scrapeados:  {len(prod)}')
     
 
@@ -105,6 +110,58 @@ def get_links():
     links_sin_repetidos = links[:14]
     return links_sin_repetidos
 
-if __name__ == "__main__":
+def run_scraping():
     links = get_links()
     scraping_links(links)
+
+def productos_por_categoria(nombre_cat):
+    try:
+        with open(f"./productos/{nombre_cat}.json", 'r', encoding='utf-8') as file:
+            productos = json.load(file)
+            return productos
+    except Exception as e:
+        raise print(f"Ocurrio un error en la busqueda de los productos en la categoria {nombre_cat}", e)
+
+#FastAPI
+app = FastAPI()
+
+@app.get('/')
+def index():
+    return {"message": "FastAPI esta funcionando correctamente, listar rutas"}
+
+@app.get('/productos')
+def get_all_products():
+    ruta_productos = os.path.join('productos')
+    if os.path.exists(ruta_productos):
+        return {"message": "Los productos son los siguientes"}
+
+    return {"message": "No hay productos que mostrar, vaya a la ruta /scraping para obtener"}
+
+@app.get('/scraping')
+def scraping_products(backgound_tasks : BackgroundTasks):
+    backgound_tasks.add_task(run_scraping)
+    return {"message": "Se estan generando los productos, esto puede tomar unos minutos, en breve puede volver a /productos"}
+
+@app.get('/categorias')
+def get_categorias():
+    ruta_productos = os.path.join('productos')
+    if os.path.exists(ruta_productos):
+        categorias = [os.path.splitext(cat)[0] for cat in os.listdir(ruta_productos)]
+        return {"message": f"Las categorias son las siguientes: {categorias}"}
+    return {"message": "No hay categorias cargadas"}
+
+@app.get('/categorias/{nombre_categoria}')
+def get_products_cat(nombre_categoria):
+    try:
+        productos = productos_por_categoria(nombre_categoria)
+        return productos
+    except Exception as e:
+        return {"message": f"No se encontraron productos en la categoria {nombre_categoria}, error: {e}"}
+
+@app.get('/categorias/{nombre_categoria}/{prod_id}')
+def get_products_cat(nombre_categoria, prod_id: int):
+    try:    
+        productos = productos_por_categoria(nombre_categoria)
+        return productos[prod_id]
+    except Exception as e:
+        return {"message": f"No existe el producto con ese id {prod_id} de la categoria {nombre_categoria}, error:  {e}"}

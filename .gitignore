@@ -1,1 +1,3 @@
 venv/
+productos/
+__pycache__/

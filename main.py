@@ -111,7 +111,9 @@ def scraping_products(backgound_tasks : BackgroundTasks):
 
 @app.get('/categorias')
 def get_categorias():
-    return {"message": "No hay categorias cargadas"}
+    categorias = get_links()
+    categorias = [categoria.split('/')[1] for categoria in categorias]
+    return {"message": f"La lista de categorias son {categorias}"}
 
 @app.get('/categorias/{nombre_categoria}')
 def get_products_cat(nombre_categoria):

@@ -70,6 +70,12 @@ def get_links():
     links_sin_repetidos = links[:14]
     return links_sin_repetidos
 
+def buscar_categoria(categoria, links):
+    for link in links:
+        if categoria in link:
+            return link
+    return False
+
 
 #FastAPI
 app = FastAPI()

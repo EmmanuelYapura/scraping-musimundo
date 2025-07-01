@@ -70,10 +70,11 @@ def get_links():
     links_sin_repetidos = links[:14]
     return links_sin_repetidos
 
-def buscar_categoria(categoria, links):
-    for link in links:
-        if categoria in link:
-            return link
+def buscar_categoria(categoria_url, links):
+    categorias = [categoria.split('/')[1] for categoria in links]
+    for i in range(len(categorias)):
+        if categoria_url == categorias[i]:
+            return links[i]
     return False
 
 def productos_cat(nombre_categoria):

@@ -1,7 +1,6 @@
 from fastapi import FastAPI, BackgroundTasks
 import requests
 from bs4 import BeautifulSoup
-import json, os
 
 COOKIES = {
     'anonymous-consents': '%5B%5D',
@@ -110,11 +109,12 @@ def get_all_products():
 def scraping_products(backgound_tasks : BackgroundTasks):
     return {"message": "Se estan generando los productos, esto puede tomar unos minutos, en breve puede volver a /productos"} """
 
+#Retorna las categorias
 @app.get('/categorias')
 def get_categorias():
     categorias = get_links()
     categorias = [categoria.split('/')[1] for categoria in categorias]
-    return {"message": f"La lista de categorias son {categorias}"}
+    return categorias
 
 @app.get('/categorias/{nombre_categoria}')
 def get_products_cat(nombre_categoria):

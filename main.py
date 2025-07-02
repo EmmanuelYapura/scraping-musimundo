@@ -144,8 +144,7 @@ def scraping_products(backgound_tasks : BackgroundTasks):
 #Retorna las categorias
 @app.get('/categorias')
 def get_categorias():
-    categorias = get_links()
-    categorias = [categoria.split('/')[1] for categoria in categorias]
+    categorias = get_subcategorias()
     return categorias
 
 @app.get('/categorias/{nombre_categoria}')

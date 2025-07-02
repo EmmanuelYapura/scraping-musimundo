@@ -129,6 +129,24 @@ def buscar_subCategoria(sub_categoria, lista_categorias):
              return subcategoria["url"]
     return False
 
+def get_products_subCat(subCategoria):
+    all_categorias = get_subcategorias(True)
+    link_subCat = buscar_subCategoria(subCategoria, all_categorias)
+    if link_subCat:
+        url_link = URL + link_subCat + '/results'
+        params = {
+            'q': ':relevance',
+            'page': 0,
+        }
+        response = requests.get(url_link, params=params, cookies=COOKIES, headers=HEADERS)
+        data = response.json()
+        nro_pages = data["pagination"]["numberOfPages"]
+        productos_cat = extraer_datos(data["results"]) 
+        extraer_productos_categorias(url_link, nro_pages, productos_cat)
+        return productos_cat
+    else:
+        return {"message": "Esta categoria no tiene productos"}
+
 #FastAPI
 app = FastAPI()
 
@@ -162,6 +180,7 @@ def get_products_cat(nombre_categoria):
         return productos
     except Exception as e:
         return {"message": f"No se encontraron productos en la categoria {nombre_categoria}, error: {e}"}
+
 
 
 """ @app.get('/categorias/{nombre_categoria}/{prod_id}')

@@ -181,6 +181,10 @@ def get_products_cat(nombre_categoria):
     except Exception as e:
         return {"message": f"No se encontraron productos en la categoria {nombre_categoria}, error: {e}"}
 
+@app.get('/categorias/{nombre_categoria}/{subcategoria}')
+def get_products_subcategorias(subcategoria):
+    products_subcat = get_products_subCat(subcategoria)
+    return products_subcat
 
 
 """ @app.get('/categorias/{nombre_categoria}/{prod_id}')

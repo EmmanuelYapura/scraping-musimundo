@@ -123,15 +123,17 @@ def get_categorias():
 @app.get('/categorias/{nombre_categoria}')
 def get_products_cat(nombre_categoria):
     try:
+        nombre_categoria = nombre_categoria.lower()
         productos = productos_cat(nombre_categoria)
         return productos
     except Exception as e:
         return {"message": f"No se encontraron productos en la categoria {nombre_categoria}, error: {e}"}
 
-@app.get('/categorias/{nombre_categoria}/{prod_id}')
+
+""" @app.get('/categorias/{nombre_categoria}/{prod_id}')
 def get_products_cat(nombre_categoria, prod_id: int):
     try:    
         productos = productos_cat(nombre_categoria)
         return productos[prod_id]
     except Exception as e:
-        return {"message": f"No existe el producto con ese id {prod_id} de la categoria {nombre_categoria}, error:  {e}"}
+        return {"message": f"No existe el producto con ese id {prod_id} de la categoria {nombre_categoria}, error:  {e}"} """

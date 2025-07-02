@@ -59,6 +59,21 @@ def extraer_productos_categorias(link, cant_pages, prod):
             prod.extend(productos)
             print(f'Cantidad de productos scrapeados:  {len(prod)}')
 
+def scrapear_productos_por_url(url):
+    try:
+        params = {'q': ':relevance', 'page': 0}
+        response = requests.get(url, params=params, cookies=COOKIES, headers=HEADERS)
+        data = response.json()
+
+        nro_pages = data["pagination"]["numberOfPages"]
+        productos = extraer_datos(data["results"])
+        extraer_productos_categorias(url, nro_pages, productos)
+
+        return productos
+    except Exception as e:
+        raise {"message": f"Error al scrapear productos: {e}"}
+
+""" Categorias """
 def get_links():
     response = requests.get(URL)
     html = response.text
@@ -81,19 +96,11 @@ def productos_cat(nombre_categoria):
     link_cat = buscar_categoria(nombre_categoria, links_cat)
     if link_cat:
         url_link = URL + link_cat + '/results'
-        params = {
-            'q': ':relevance',
-            'page': 0,
-        }
-        response = requests.get(url_link, params=params, cookies=COOKIES, headers=HEADERS)
-        data = response.json()
-        nro_pages = data["pagination"]["numberOfPages"]
-        productos_cat = extraer_datos(data["results"]) 
-        extraer_productos_categorias(url_link, nro_pages, productos_cat)
-        return productos_cat
+        return scrapear_productos_por_url(url_link)
     else:
-        return {"message": "Esta categoria no tiene productos"}
+        return {"message": "Esta categoria no tiene productos o no existe"}
 
+""" Subcategorias """
 def get_subcategorias(url = False):
     response = requests.get(URL)
     html = response.text
@@ -134,18 +141,9 @@ def get_products_subCat(subCategoria):
     link_subCat = buscar_subCategoria(subCategoria, all_categorias)
     if link_subCat:
         url_link = URL + link_subCat + '/results'
-        params = {
-            'q': ':relevance',
-            'page': 0,
-        }
-        response = requests.get(url_link, params=params, cookies=COOKIES, headers=HEADERS)
-        data = response.json()
-        nro_pages = data["pagination"]["numberOfPages"]
-        productos_cat = extraer_datos(data["results"]) 
-        extraer_productos_categorias(url_link, nro_pages, productos_cat)
-        return productos_cat
+        return scrapear_productos_por_url(url_link)
     else:
-        return {"message": "Esta categoria no tiene productos"}
+        return {"message": "Esta categoria no tiene productos o no existe"}
 
 #FastAPI
 app = FastAPI()

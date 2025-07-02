@@ -94,6 +94,34 @@ def productos_cat(nombre_categoria):
     else:
         return {"message": "Esta categoria no tiene productos"}
 
+def get_subcategorias(url = False):
+    response = requests.get(URL)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    #Estos contenedores son de cada categoria principal
+    contenedores_cat = soup.find_all('div', class_='mus-nav-Lc')
+    subcategorias = []
+    for categoria in contenedores_cat:
+        nombre_categoria = categoria.find('div', class_='ex-h2')
+        categoria_principal = nombre_categoria.find('a')["href"].split('/')[1]
+        item = {
+            "categoria" : categoria_principal,
+            "subcategorias": []
+        }
+        #Contenedores subcategorias
+        ul_list = categoria.find_all('ul')
+        for ul in ul_list:
+            #obtengo los links de subcategorias
+            link = ul.find_all('a')
+            for subcat in link:
+                nombre = subcat.text.strip()
+                nombre = nombre.replace(' ', '-')
+                url_false = f'/categorias/{categoria_principal}/{nombre.lower()}'
+                item['subcategorias'].append({"nombre": nombre.lower(), "url": subcat["href"] if url else url_false})
+        subcategorias.append(item)
+
+    return subcategorias
+
 #FastAPI
 app = FastAPI()
 

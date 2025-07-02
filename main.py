@@ -101,6 +101,10 @@ app = FastAPI()
 def index():
     return {"message": "FastAPI esta funcionando correctamente, listar rutas"}
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 """ @app.get('/productos')
 def get_all_products():
     return {"message": "No hay productos que mostrar, vaya a la ruta /scraping para obtener"}

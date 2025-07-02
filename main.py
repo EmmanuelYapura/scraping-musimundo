@@ -158,14 +158,6 @@ def index():
 def health_check():
     return {"status": "ok"}
 
-""" @app.get('/productos')
-def get_all_products():
-    return {"message": "No hay productos que mostrar, vaya a la ruta /scraping para obtener"}
-
-@app.get('/scraping')
-def scraping_products(backgound_tasks : BackgroundTasks):
-    return {"message": "Se estan generando los productos, esto puede tomar unos minutos, en breve puede volver a /productos"} """
-
 #Retorna las categorias
 @app.get('/categorias')
 def get_categorias():
@@ -185,12 +177,3 @@ def get_products_cat(nombre_categoria):
 def get_products_subcategorias(subcategoria):
     products_subcat = get_products_subCat(subcategoria)
     return products_subcat
-
-
-""" @app.get('/categorias/{nombre_categoria}/{prod_id}')
-def get_products_cat(nombre_categoria, prod_id: int):
-    try:    
-        productos = productos_cat(nombre_categoria)
-        return productos[prod_id]
-    except Exception as e:
-        return {"message": f"No existe el producto con ese id {prod_id} de la categoria {nombre_categoria}, error:  {e}"} """

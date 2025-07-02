@@ -122,6 +122,13 @@ def get_subcategorias(url = False):
 
     return subcategorias
 
+def buscar_subCategoria(sub_categoria, lista_categorias):
+    for categoria in lista_categorias:
+        for subcategoria in categoria["subcategorias"]:
+            if sub_categoria == subcategoria["nombre"]:
+             return subcategoria["url"]
+    return False
+
 #FastAPI
 app = FastAPI()
 

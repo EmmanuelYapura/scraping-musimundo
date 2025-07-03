@@ -7,8 +7,7 @@ Este proyecto es un **web scraper** desarrollado en Python que extrae informaci�
   - Python 3
   - requests
   - BeautifulSoup
-  - json
-  - os
+  - FastAPI
 
 ##  ¿Qué hace este scraper?
 

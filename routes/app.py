@@ -6,13 +6,13 @@ scraper = MusimundoScrapper()
 
 @router.get('/categorias')
 def get_categorias():
-    return scraper.get_subcategorias()
+    return scraper.obtener_subcategorias()
 
 @router.get('/categorias/{nombre_categoria}')
 def get_products_cat(nombre_categoria):
     try:
         nombre_categoria = nombre_categoria.lower()
-        productos = scraper.productos_cat(nombre_categoria)
+        productos = scraper.obtener_productos_por_categoria(nombre_categoria)
         return productos
     except Exception as e:
         return {"message": f"No se encontraron productos en la categoria {nombre_categoria}, error: {e}"}
@@ -21,7 +21,7 @@ def get_products_cat(nombre_categoria):
 def get_products_subcategorias(subcategoria):
     try:
         subcategoria = subcategoria.lower()
-        products_subcat = scraper.get_products_subCat(subcategoria)
+        products_subcat = scraper.obtener_productos_subcategoria(subcategoria)
         return products_subcat
     except Exception as e:
         return {"message" : f"No se encontraron productos en la subcategoria {subcategoria}, Error {e}"}

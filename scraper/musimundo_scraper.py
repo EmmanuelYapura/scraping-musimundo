@@ -28,31 +28,31 @@ class MusimundoScrapper():
                 continue
         return datos
 
-    def extraer_productos_categorias(self, link, cant_pages, prod):
-        for i in range(1, cant_pages):
+    def extraer_productos_categorias(self, link, cant_paginas, productos):
+        for i in range(1, cant_paginas):
                 params = {
                     'q': ':relevance',
                     'page': i,
                 }
                 response = requests.get(link, params=params, cookies=self.COOKIES, headers=self.HEADERS)
                 data = response.json()
-                prod.extend(self.extraer_datos(data["results"]))
-                print(f'Cantidad de productos scrapeados:  {len(prod)}')
+                productos.extend(self.extraer_datos(data["results"]))
+                print(f'Cantidad de productos scrapeados:  {len(productos)}')
 
     def scrapear_productos_por_url(self, url):
         try:
             params = {'q': ':relevance', 'page': 0}
             response = requests.get(url, params=params, cookies=self.COOKIES, headers=self.HEADERS)
             data = response.json()
-            nro_pages = data["pagination"]["numberOfPages"]
+            total_paginas = data["pagination"]["numberOfPages"]
             productos = self.extraer_datos(data["results"])
-            self.extraer_productos_categorias(url, nro_pages, productos)
+            self.extraer_productos_categorias(url, total_paginas, productos)
             return productos
         except Exception as e:
             raise {"message": f"Error al scrapear productos: {e}"}
 
     """ Categorias """
-    def get_links(self):
+    def obtener_links_categorias(self):
         response = requests.get(self.URL)
         soup = BeautifulSoup(response.text, "html.parser")
         #Estos links obtienen todos los de categoria (elementos repetidos)
@@ -67,8 +67,8 @@ class MusimundoScrapper():
                 return links[i]
         return False
 
-    def productos_cat(self, nombre_categoria):
-        links_cat = self.get_links()
+    def obtener_productos_por_categoria(self, nombre_categoria):
+        links_cat = self.obtener_links_categorias()
         link_cat = self.buscar_categoria(nombre_categoria, links_cat)
         if link_cat:
             url_link = self.URL + link_cat + '/results'
@@ -77,7 +77,7 @@ class MusimundoScrapper():
             return {"message": "Esta categoria no tiene productos o no existe"}
 
     """ Subcategorias """
-    def get_subcategorias(self, url = False):
+    def obtener_subcategorias(self, url = False):
         response = requests.get(self.URL)
         soup = BeautifulSoup(response.text, "html.parser")
         #Estos contenedores son de cada categoria principal
@@ -85,9 +85,9 @@ class MusimundoScrapper():
         subcategorias = []
 
         for categoria in contenedores_cat:
-            nombre_categoria = categoria.find('div', class_='ex-h2')
-            categoria_principal = nombre_categoria.find('a')["href"].split('/')[1]
-            item = {"categoria" : categoria_principal, "subcategorias": []}
+            contenedor_categoria = categoria.find('div', class_='ex-h2')
+            nombre_categoria = contenedor_categoria.find('a')["href"].split('/')[1]
+            item = {"categoria" : nombre_categoria, "subcategorias": []}
             #Contenedores subcategorias
             ul_list = categoria.find_all('ul')
             for ul in ul_list:
@@ -95,23 +95,23 @@ class MusimundoScrapper():
                 link = ul.find_all('a')
                 for subcat in link:
                     nombre = subcat.text.strip().replace(' ', '-').lower()
-                    url_api = f'/categorias/{categoria_principal}/{nombre}'
+                    url_api = f'/categorias/{nombre_categoria}/{nombre}'
                     item['subcategorias'].append({"nombre": nombre.lower(), "url": subcat["href"] if url else url_api})
             subcategorias.append(item)
         return subcategorias
 
-    def buscar_subCategoria(self, sub_categoria, lista_categorias):
+    def buscar_subcategoria(self, nombre_sub_cat, lista_categorias):
         for categoria in lista_categorias:
             for subcategoria in categoria["subcategorias"]:
-                if sub_categoria == subcategoria["nombre"]:
+                if nombre_sub_cat == subcategoria["nombre"]:
                     return subcategoria["url"]
         return False
 
-    def get_products_subCat(self, subCategoria):
-        all_categorias = self.get_subcategorias(True)
-        link_subCat = self.buscar_subCategoria(subCategoria, all_categorias)
-        if link_subCat:
-            url_link = URL + link_subCat + '/results'
+    def obtener_productos_subcategoria(self, sub_categoria):
+        total_categorias = self.obtener_subcategorias(True)
+        link_sub_cat = self.buscar_subcategoria(sub_categoria, total_categorias)
+        if link_sub_cat:
+            url_link = URL + link_sub_cat + '/results'
             return self.scrapear_productos_por_url(url_link)
         else:
             return {"message": "Esta categoria no tiene productos o no existe"}

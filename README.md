@@ -50,12 +50,15 @@ source venv/bin/activate
   ```
   pip install -r requirements.txt
   ```
-4. **Ejecuta el script:**
+4. **Levantar el servidor**
   ```
-  python main.py
+  uvicorn main:app --reload
   ```
 
-5. **Los datos se guardarán automáticamente en la carpeta `productos`.**
+5. **Ingresar al puerto**
+  ```
+  http://127.0.0.1:8000
+  ```
 
 ## Notas importantes
 

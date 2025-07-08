@@ -59,6 +59,123 @@ source venv/bin/activate
   http://127.0.0.1:8000
   ```
 
+## Endpoints
+
+* GET /categorias
+  * Descripcion: Devuelve las categorias junto a sus subcategorias
+
+  * Ejemplo
+
+  ```
+  curl http://127.0.0.1:8000/categorias
+  ```
+
+  * Respuesta
+
+  ```
+  [
+    {
+      "categoria": "climatizacion",
+      "subcategorias": [
+        {
+          "nombre": "aire-acondicionado",
+          "url": "/categorias/climatizacion/aire-acondicionado"
+        },
+        {
+          "nombre": "calefactores",
+          "url": "/categorias/climatizacion/calefactores"
+        },
+        {
+          "nombre": "ventiladores",
+          "url": "/categorias/climatizacion/ventiladores"
+        },
+        {
+          "nombre": "climatizadores",
+          "url": "/categorias/climatizacion/climatizadores"
+        },
+        {
+          "nombre": "accesorios",
+          "url": "/categorias/climatizacion/accesorios"
+        }
+      ]
+    },
+  ...
+  ]
+  ```
+
+* GET /categorias/{nombre_categoria}
+  * Descripcion: Devuelve una lista de productos de la categoria especificada
+
+  * Parametros
+    * nombre_categoria (string) 
+
+  * Ejemplo
+
+  ```
+  curl http://127.0.0.1:8000/categorias/camaras
+  ```
+  * Respuesta
+
+  ```
+  [
+    {
+      "name": "CAMARA IP INALAMBRICA NOGANET NGW-45",
+      "description": "Camara IP inalambrica. Vision nocturna. 4 LEDS infrarrojos + 4 LEDS blancos. Rotacion 355/90. Resolucion de 480P. Angulo de vision 120. Video H.264. Reproduccion 24/7. Audio bidireccional. Detector de movimiento. Control remoto desde App. Lector Micro SD: 128G. Conexion: WiFi 802.11b/g/n. Montable a la pared. Medidas: (alt x anc x prof): 10 x 10 x 8 cm.",
+      "cashPrice": 37999,
+      "price": 37999,
+      "onlyDelivery": false,
+      "brandInfo": "NOGANET",
+      "url": "/camaras/camaras-de-seguridad/camara-ip-inalambrica-noganet-ngw-45/p/01092014"
+    },
+    {
+      "name": "CAMARA IP INALAMBRICA NOGANET NGW-11",
+      "description": "Camara IP inalambrica. Vision nocturna. 4 LEDS infrarrojos + 4 LEDS blancos. Rotacion 355/90. Resolucion de 480P. Angulo de vision 120. Video H.264. Reproduccion 24/7. Audio bidireccional. Detector de movimiento. Control remoto desde App. Lector Micro SD: 128G. Conexion: WiFi 802.11b/g/n. Montable a la pared. Medidas: (alt x anc x prof): 14 x 11 x 10 cm.",
+      "cashPrice": 31999,
+      "price": 31999,
+      "onlyDelivery": false,
+      "brandInfo": "NOGANET",
+      "url": "/camaras/camaras-de-seguridad/camara-ip-inalambrica-noganet-ngw-11/p/01092013"
+    },
+  ...
+  ]
+  ```
+* GET /categorias/{nombre_categoria}/{subcategoria}
+  * Descripcion: Devuelve una lista de productos de la subcategoria especificada
+
+  * Parametros
+    * nombre_categoria (string)
+    * subcategoria (string) 
+
+  * Ejemplo
+  
+  ```
+  curl http://127.0.0.1:8000/categorias/audio-tv-video/televisores
+  ```
+  * Respuesta
+  ```
+  [
+    {
+      "name": "SMART DLED GOOGLE TV QUINT 32\" PULGADAS HD QT3-32 GTV2024 HD",
+      "description": "Televisor Smart DLED Google. Pantalla de 32\" HD (1366x768). Frecuncia de barrido 50/60Hz. Radio de contraste 5000:01. Brillo 240 CD/M2. Salidas de audio. Potencia 2 x 10 W (RMS). Conexiones: Wi Fi (2.4G/5G). Bluetooth 5.0. HDMI. USB. Incluye conermoto.",
+      "cashPrice": 299999,
+      "price": 229999,
+      "onlyDelivery": false,
+      "brandInfo": "QUINT",
+      "url": "/audio-tv-video/televisores/smart-dled-google-tv-quint-32-pulgadas-hd-qt3-32-gtv2024-hd/p/01071002"
+    },
+    {
+      "name": "SMART LED TV PHILIPS 32\" PULGADAS HD 32PHD6910/77",
+      "description": "Televisor Smart LED. Pantalla de 32\" Pixel Plus HD (1366x768 px). Relacion de aspecto: 16:9. Tamano diagonal: 80 cm. Frecuencia de barrido: 60 Hz. Brillo 200cd/m2. Contraste y color HDR1. Audio: Dolby Digital MS12 V2.6.2: nivelador de volumen. Modo nocturno. Mejora de graves. Dialogos nitidos. Ecualizador con IA. Sonido con IA. Potencia RMS: 16 W. Sintonizador TDA. Conexiones: Wi-Fi integrada. 3x HDMI. 2x USB. Antena IEC75. Ethernet-LAN RJ-45. Sistema operativo: TITAN. Medidas con base (alt x anch x prof): 71.1 x 17 x 4.38 cm.",
+      "cashPrice": 422399,
+      "price": 259999,
+      "onlyDelivery": false,
+      "brandInfo": "PHILIPS",
+      "url": "/audio-tv-video/televisores/smart-led-tv-philips-32-pulgadas-hd-32phd6910-77/p/01048006"
+    },
+  ...
+  ]
+  ```
+
 ## Notas importantes
 
 - Este proyecto fue realizado con fines educativos y de práctica en web scraping.

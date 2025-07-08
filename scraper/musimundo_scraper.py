@@ -21,7 +21,7 @@ class MusimundoScrapper():
                     "price": producto["price"]["value"], #Precio con descuento (Si es que tiene)
                     "onlyDelivery": producto["onlyDelivery"],
                     "brandInfo": producto["brandInfo"]["name"],
-                    "url" : producto["url"]
+                    "url" : self.URL + producto["url"]
                 })
             except KeyError as e:
                 print(f"Producto incompleto, falta {e}")

@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from routes.app import router
+from database.database import Base, engine
+
 
 app = FastAPI()
+Base.metadata.create_all(bind=engine)
 app.include_router(router)
 
 @app.get('/')

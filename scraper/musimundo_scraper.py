@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from fastapi import HTTPException
 from constantes import URL,COOKIES,HEADERS 
 
 class MusimundoScrapper():
@@ -74,7 +75,7 @@ class MusimundoScrapper():
             url_link = self.URL + link_cat + '/results'
             return self.scrapear_productos_por_url(url_link)
         else:
-            return {"message": "Esta categoria no tiene productos o no existe"}
+             raise HTTPException(status_code=400, detail="Esta categoria no existe")
 
     """ Subcategorias """
     def obtener_subcategorias(self, url = False):

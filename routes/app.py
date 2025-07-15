@@ -38,6 +38,9 @@ def scrapear_guardar_productos(categoria_nombre: str, subcategoria_nombre: str =
         else:
             productos_data = scraper.obtener_productos_por_categoria(categoria_nombre)
 
+        if not productos_data:
+            raise HTTPException(status_code=400, detail="Esta categoria no tiene productos")
+        
         productos_schema = [ProductoSchema(**data) for data in productos_data]
 
         categoria = get_or_create_categoria(db, categoria_nombre)

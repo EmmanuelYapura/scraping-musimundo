@@ -35,3 +35,7 @@ class Producto(Base):
 
     subcategoria_id = Column(Integer, ForeignKey('subcategorias.id'))
     subcategoria = relationship("Subcategoria", back_populates="productos")
+
+    categoria_id = Column(Integer, ForeignKey('categorias.id'), nullable=True)
+    categoria = relationship("Categoria", backref="productos_directos")  
+    

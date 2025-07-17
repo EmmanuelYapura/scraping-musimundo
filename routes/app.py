@@ -51,7 +51,7 @@ def scrapear_guardar_productos(categoria_nombre: str, subcategoria_nombre: str =
             subcategoria = get_or_create_subcategoria(db, subcategoria_nombre, categoria.id)
             subcategoria_id = subcategoria.id
 
-        productos = create_productos(db, productos_schema, subcategoria_id)
+        productos = create_productos(db, productos_schema, categoria.id, subcategoria_id)
 
         return {
             "message": f"{len(productos)} productos guardados exitosamente",

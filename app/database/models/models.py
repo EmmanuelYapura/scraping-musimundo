@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 
-from database.database import Base
+from app.database.database import Base
 
 class Categoria(Base):
     __tablename__ = 'categorias'

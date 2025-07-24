@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from scraper.musimundo_scraper import MusimundoScrapper
 from sqlalchemy.orm import Session
-from database.schemas.schema import ProductoSchema
-from database.database import get_base
-from database.crud.crud import get_or_create_categoria, get_or_create_subcategoria, create_productos
+from app.scraper.musimundo_scraper import MusimundoScrapper
+from app.database.schemas.schema import ProductoSchema
+from app.database.database import get_base
+from app.database.crud.crud import get_or_create_categoria, get_or_create_subcategoria, create_productos
 
 router = APIRouter()
 scraper = MusimundoScrapper()

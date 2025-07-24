@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from  database.models.models import Categoria, Subcategoria, Producto
-from database.schemas.schema import ProductoSchema
+from app.database.models.models import Categoria, Subcategoria, Producto
+from app.database.schemas.schema import ProductoSchema
 
 def get_or_create_categoria(db: Session, nombre: str):
     categoria = db.query(Categoria).filter(Categoria.nombre == nombre).first()

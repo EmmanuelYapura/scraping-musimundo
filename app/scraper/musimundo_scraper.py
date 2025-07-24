@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from fastapi import HTTPException
-from constantes import URL,COOKIES,HEADERS 
+from app.constantes import URL,COOKIES,HEADERS 
 
 class MusimundoScrapper():
     URL = URL

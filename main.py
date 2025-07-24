@@ -1,9 +1,24 @@
 from fastapi import FastAPI
 from routes.app import router
 from database.database import Base, engine
+from constantes import description
 
 
-app = FastAPI()
+app = FastAPI(
+    title="MusimundoScraper API",
+    description=description,
+    summary="API para scraping y gestión de productos de Musimundo.",
+    version="1.0.0",
+    contact={
+        "name": "Repository",
+        "url": "https://github.com/EmmanuelYapura/scraping-musimundo",
+        "email": "eyapura96@gmail.com",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT",
+    },
+)
 Base.metadata.create_all(bind=engine)
 app.include_router(router)
 

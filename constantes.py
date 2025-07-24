@@ -23,3 +23,22 @@ HEADERS = {
 }
 
 URL = 'https://www.musimundo.com'
+
+description = """
+**MusimundoScraper API** te permite automatizar el scraping y gestión de productos desde la tienda online de Musimundo.
+
+## Categorías y Subcategorías
+
+- Podés **obtener categorías** y sus respectivas subcategorías.
+
+- Almacenar productos en función de la categoría o subcategoría scrapeada.
+
+## Productos
+
+- Los productos se guardan en base de datos (SQLite).
+
+- Se **actualizan automáticamente** si ya existen, evitando duplicados.
+
+- Se pueden asociar a subcategorías aunque inicialmente se hayan cargado solo con la categoría.
+
+"""

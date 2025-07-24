@@ -49,12 +49,18 @@ source venv/bin/activate
   ```
   pip install -r requirements.txt
   ```
-4. **Levantar el servidor**
+
+4. **Ingresar en la carpeta app/**
+  ```
+    cd "nombre_carpeta"
+  ```
+
+5. **Levantar el servidor**
   ```
   uvicorn main:app --reload
   ```
 
-5. **Ingresar al puerto**
+6. **Ingresar al puerto**
   ```
   http://127.0.0.1:8000
   ```

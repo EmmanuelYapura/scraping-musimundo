@@ -8,6 +8,7 @@ Este proyecto es un **web scraper** desarrollado en Python que extrae informaci�
   - requests
   - BeautifulSoup
   - FastAPI
+  - SQLAlchemy
 
 ##  ¿Qué hace este scraper?
 
@@ -20,8 +21,36 @@ Este proyecto es un **web scraper** desarrollado en Python que extrae informaci�
      -Marca
      -Solo envío (booleano)
      -URL del producto
--  Guarda los productos de cada categoría en archivos `.json` con nombre correspondiente.
--  Verifica si el archivo ya existe para evitar sobrescribir datos.
+-  Guarda productos en una base de datos sqlite 
+-  Verifica si el archivo ya existe para evitar sobrescribir datos y actualiza sus id de subcategorias en caso de ser necesario
+
+## Docker (¡rápido y sin instalaciones locales!)
+
+Si solo querés probar o ejecutar el proyecto sin instalar Python ni dependencias, usá Docker.
+
+### 1. Requisitos
+- Tener instalado [Docker Engine](https://docs.docker.com/engine/install/) (o Docker Desktop en Windows/Mac).
+
+### 2. Construir la imagen
+Desde la **raíz del repo** (donde está el `Dockerfile`):
+
+   ```bash
+      docker build -t musimundo-api .
+   ```
+
+### 3. Levantar el servidor
+   ```bash
+      docker run -d --name musimundo-container -p 8000:8000 musimundo-api
+   ```
+
+### 4. Abrir navegador en: 
+
+   - http://localhost:8000/ – Para visualizar rutas
+   - http://localhost:8000/categorias – Para visualizar categorias
+   - http://localhost:8000/docs – Swagger interactivo
+   - http://localhost:8000/redoc – ReDoc
+
+---
 
 ## Cómo ejecutar el scraper
 
@@ -50,17 +79,12 @@ source venv/bin/activate
   pip install -r requirements.txt
   ```
 
-4. **Ingresar en la carpeta app/**
+4. **Levantar el servidor**
   ```
-    cd "nombre_carpeta"
-  ```
-
-5. **Levantar el servidor**
-  ```
-  uvicorn main:app --reload
+  uvicorn app.main:app --reload
   ```
 
-6. **Ingresar al puerto**
+5. **Ingresar al puerto**
   ```
   http://127.0.0.1:8000
   ```

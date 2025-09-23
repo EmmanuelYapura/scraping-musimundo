@@ -1,11 +1,11 @@
-from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import create_engine
 
-DATABASE_URL = 'sqlite:///./productos.db'
+DATABASE_URL = 'mysql+pymysql://root:123456@localhost:3306/test'
 
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread" : False}
+    DATABASE_URL
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False , bind=engine)

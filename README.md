@@ -95,17 +95,16 @@ pip install -r requirements.txt
 docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 mysql
 ```
 
-### Ingresar el password para el cliente root para ingresar a la base de datos
-
-dentro de la terminal del contenedor de docker:
+  Ingresar el password para el cliente root para ingresar a la base de datos
+  Dentro de la terminal del contenedor de docker:
 
 ```
 mysql -p
 ```
 
-nota: en la consola de docker la contrasena es invisible!
+  Nota: en la consola de docker la contrasena es invisible!
 
-### Creamos la base de datos
+  Creamos la base de datos
 
 ```
 CREATE DATABASE test;

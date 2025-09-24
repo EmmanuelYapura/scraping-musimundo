@@ -1,54 +1,57 @@
 # Musimundo Scraper
 
-Este proyecto es un **web scraper** desarrollado en Python que extrae información de productos desde la tienda online de [Musimundo](https://www.musimundo.com/). Se recopilan datos como nombre, descripción, precios, marca y más, y se guardan en archivos `.json` organizados por categoría.
+Este proyecto es un **web scraper** desarrollado en Python que extrae información de productos desde la tienda online de [Musimundo](https://www.musimundo.com/). Se recopilan datos como nombre, descripción, precios, marca y más, y se guardan en una base de datos mysql organizados por categoría o subcategoria. Tambien pueden visualizarse todos los productos en la tabla productos.
 
-##  Tecnologías utilizadas
+## Tecnologías utilizadas
 
-  - Python 3
-  - requests
-  - BeautifulSoup
-  - FastAPI
-  - SQLAlchemy
+- Python 3
+- requests
+- BeautifulSoup
+- FastAPI
+- SQLAlchemy
 
-##  ¿Qué hace este scraper?
+## ¿Qué hace este scraper?
 
--  Extrae enlaces únicos de categorías principales.
--  Hace peticiones a la API interna de cada categoría con paginación.
--  Extrae datos relevantes de cada producto:
-     -Nombre
-     -Descripción
-     -Precio original y con descuento
-     -Marca
-     -Solo envío (booleano)
-     -URL del producto
--  Guarda productos en una base de datos sqlite 
--  Verifica si el archivo ya existe para evitar sobrescribir datos y actualiza sus id de subcategorias en caso de ser necesario
+- Extrae enlaces únicos de categorías principales.
+- Hace peticiones a la API interna de cada categoría con paginación.
+- Extrae datos relevantes de cada producto:
+  -Nombre
+  -Descripción
+  -Precio original y con descuento
+  -Marca
+  -Solo envío (booleano)
+  -URL del producto
+- Guarda productos en una base de datos mysql, en este proyecto la base de datos tiene un usuaio root y una contrasena hardcodeada para su uso rapido siguiendo las instrucciones
+- Verifica si el producto ya existe para evitar sobrescribir datos y actualiza sus id de subcategorias en caso de ser necesario
 
 ## Docker (¡rápido y sin instalaciones locales!)
 
 Si solo querés probar o ejecutar el proyecto sin instalar Python ni dependencias, usá Docker.
 
 ### 1. Requisitos
+
 - Tener instalado [Docker Engine](https://docs.docker.com/engine/install/) (o Docker Desktop en Windows/Mac).
 
 ### 2. Construir la imagen
+
 Desde la **raíz del repo** (donde está el `Dockerfile`):
 
-   ```bash
-      docker build -t musimundo-api .
-   ```
+```bash
+   docker build -t musimundo-api .
+```
 
 ### 3. Levantar el servidor
-   ```bash
-      docker run -d --name musimundo-container -p 8000:8000 musimundo-api
-   ```
 
-### 4. Abrir navegador en: 
+```bash
+   docker run -d --name musimundo-container -p 8000:8000 musimundo-api
+```
 
-   - http://localhost:8000/ – Para visualizar rutas
-   - http://localhost:8000/categorias – Para visualizar categorias
-   - http://localhost:8000/docs – Swagger interactivo
-   - http://localhost:8000/redoc – ReDoc
+### 4. Abrir navegador en:
+
+- http://localhost:8000/ – Para visualizar rutas
+- http://localhost:8000/categorias – Para visualizar categorias
+- http://localhost:8000/docs – Swagger interactivo
+- http://localhost:8000/redoc – ReDoc
 
 ---
 
@@ -56,51 +59,87 @@ Desde la **raíz del repo** (donde está el `Dockerfile`):
 
 1. **Clonar el repositorio:**
 
-  ```
-  git clone https://github.com/EmmanuelYapura/scraping-musimundo.git "nombre_carpeta"
-  cd "nombre_carpeta"
-  ```
+```
+git clone https://github.com/EmmanuelYapura/scraping-musimundo.git "nombre_carpeta"
+cd "nombre_carpeta"
+```
 
 2. **Crear un entorno virtual:**
-  ```
-  python -m venv venv
-  ```
-   
+
+```
+python -m venv venv
+```
+
 - Para Windows
+
 ```
 venv/Scripts/activate
 ```
+
 - Para Linux/macOs
+
 ```
 source venv/bin/activate
 ```
+
 3. **Instala las dependencias :**
-  ```
-  pip install -r requirements.txt
-  ```
 
-4. **Levantar el servidor**
-  ```
-  uvicorn app.main:app --reload
-  ```
+```
+pip install -r requirements.txt
+```
 
-5. **Ingresar al puerto**
-  ```
-  http://127.0.0.1:8000
-  ```
+4. **Crear base de datos para la conexion**
+   Nota: en estas instrucciones vamos a crear la base usando un contenedor mysql en docker y usando un usuario root a modo de prueba. Creamos el contenedor usando la imagen de mysql con la siguiente linea:
+
+```
+docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 mysql
+```
+
+### Ingresar el password para el cliente root para ingresar a la base de datos
+
+dentro de la terminal del contenedor de docker:
+
+```
+mysql -p
+```
+
+nota: en la consola de docker la contrasena es invisible!
+
+### Creamos la base de datos
+
+```
+CREATE DATABASE test;
+```
+
+```
+USE test;
+```
+
+5. **Levantar el servidor**
+
+```
+uvicorn app.main:app --reload
+```
+
+6. **Ingresar al puerto**
+
+```
+http://127.0.0.1:8000
+```
 
 ## Endpoints
 
-* GET /categorias
-  * Descripcion: Devuelve las categorias junto a sus subcategorias
+- GET /categorias
 
-  * Ejemplo
+  - Descripcion: Devuelve las categorias junto a sus subcategorias
+
+  - Ejemplo
 
   ```
   curl http://127.0.0.1:8000/categorias
   ```
 
-  * Respuesta
+  - Respuesta
 
   ```
   [
@@ -133,18 +172,21 @@ source venv/bin/activate
   ]
   ```
 
-* GET /categorias/{nombre_categoria}
-  * Descripcion: Devuelve una lista de productos de la categoria especificada
+- GET /categorias/{nombre_categoria}
 
-  * Parametros
-    * nombre_categoria (string) 
+  - Descripcion: Devuelve una lista de productos de la categoria especificada
 
-  * Ejemplo
+  - Parametros
+
+    - nombre_categoria (string)
+
+  - Ejemplo
 
   ```
   curl http://127.0.0.1:8000/categorias/camaras
   ```
-  * Respuesta
+
+  - Respuesta
 
   ```
   [
@@ -169,19 +211,24 @@ source venv/bin/activate
   ...
   ]
   ```
-* GET /categorias/{nombre_categoria}/{subcategoria}
-  * Descripcion: Devuelve una lista de productos de la subcategoria especificada
 
-  * Parametros
-    * nombre_categoria (string)
-    * subcategoria (string) 
+- GET /categorias/{nombre_categoria}/{subcategoria}
 
-  * Ejemplo
-  
+  - Descripcion: Devuelve una lista de productos de la subcategoria especificada
+
+  - Parametros
+
+    - nombre_categoria (string)
+    - subcategoria (string)
+
+  - Ejemplo
+
   ```
   curl http://127.0.0.1:8000/categorias/audio-tv-video/televisores
   ```
-  * Respuesta
+
+  - Respuesta
+
   ```
   [
     {
@@ -204,6 +251,26 @@ source venv/bin/activate
     },
   ...
   ]
+  ```
+
+- POST /scraper/categoria
+
+  - Descripcion: Carga los productos en la base de datos
+
+  - Ejemplo
+
+  ```
+  curl http://127.0.0.1:8000/scraper/electrohogar
+  ```
+
+  - Respuesta
+
+  ```
+  {
+  "message": "497 productos guardados exitosamente",
+  "categoria": "electrohogar",
+  "subcategoria": null
+  }
   ```
 
 ## Notas importantes

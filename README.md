@@ -277,6 +277,7 @@ http://127.0.0.1:8000
 - Este proyecto fue realizado con fines educativos y de práctica en web scraping.
 - La estructura de la web puede cambiar y romper el scraper en el futuro.
 - Se recomienda evitar hacer peticiones masivas para no sobrecargar los servidores de Musimundo.
+- La base de datos que se utiliza en este proyecto esta hardcodeada con un usuario root, por ese motivo no hay un archivo .env con variables de entorno
 
 ## Autor
 

@@ -89,22 +89,22 @@ pip install -r requirements.txt
 ```
 
 4. **Crear base de datos para la conexion**
-   Nota: en estas instrucciones vamos a crear la base usando un contenedor mysql en docker y usando un usuario root a modo de prueba. Creamos el contenedor usando la imagen de mysql con la siguiente linea:
+- Nota: en estas instrucciones vamos a crear la base usando un contenedor mysql en docker y usando un usuario root a modo de prueba. Creamos el contenedor usando la imagen de mysql con la siguiente linea:
 
 ```
 docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 mysql
 ```
 
-  Ingresar el password para el cliente root para ingresar a la base de datos
-  Dentro de la terminal del contenedor de docker:
+- Ingresar el password para el cliente root para ingresar a la base de datos
+- Dentro de la terminal del contenedor de docker:
 
 ```
 mysql -p
 ```
 
-  Nota: en la consola de docker la contrasena es invisible!
+- Nota: en la consola de docker la contrasena es invisible!
 
-  Creamos la base de datos
+- Creamos la base de datos
 
 ```
 CREATE DATABASE test;

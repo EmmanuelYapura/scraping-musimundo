@@ -9,6 +9,7 @@ Este proyecto es un **web scraper** desarrollado en Python que extrae informaci�
 - BeautifulSoup
 - FastAPI
 - SQLAlchemy
+- MySQL
 
 ## ¿Qué hace este scraper?
 
